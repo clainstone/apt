@@ -9,7 +9,6 @@ url=https://clainstone.com/apt
 apt-get update
 apt-get install -y --no-install-recommends curl ca-certificates
 
-install -d -m 0755 /etc/apt/keyrings
 curl -fsSL "$url/cbirds.gpg" | tee /etc/apt/keyrings/cbirds.gpg >/dev/null
 echo "deb [signed-by=/etc/apt/keyrings/cbirds.gpg] $url stable main" |
     tee /etc/apt/sources.list.d/cbirds.list
