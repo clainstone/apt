@@ -18,7 +18,7 @@ jobs:
       matrix:
         runner: [ubuntu-latest, ubuntu-24.04-arm]
     runs-on: ${{ matrix.runner }}
-    container: debian:bullseye
+    container: debian:bookworm
     steps:
       - uses: actions/checkout@v4
       - run: apt-get update && apt-get install -y --no-install-recommends build-essential curl ca-certificates
@@ -61,7 +61,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { runner: ubuntu-latest, image: "debian:bullseye" }
           - { runner: ubuntu-latest, image: "debian:bookworm" }
           - { runner: ubuntu-latest, image: "ubuntu:22.04" }
           - { runner: ubuntu-latest, image: "ubuntu:24.04" }
