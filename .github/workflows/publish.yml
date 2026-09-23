@@ -1,0 +1,74 @@
+name: publish
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        runner: [ubuntu-latest, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.runner }}
+    container: debian:bullseye
+    steps:
+      - uses: actions/checkout@v4
+      - run: apt-get update && apt-get install -y --no-install-recommends build-essential curl ca-certificates
+      - run: ./build-deb.sh
+      - run: dpkg-deb --info *.deb && dpkg-deb --contents *.deb
+      - uses: actions/upload-artifact@v4
+        with:
+          name: deb-${{ matrix.runner }}
+          path: "*.deb"
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: deb-*
+          path: debs
+          merge-multiple: true
+      - run: sudo apt-get update && sudo apt-get install -y dpkg-dev
+      - run: ./publish.sh debs site
+        env:
+          APT_SIGNING_KEY: ${{ secrets.APT_SIGNING_KEY }}
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deploy
+        uses: actions/deploy-pages@v4
+
+  test:
+    needs: publish
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { runner: ubuntu-latest, image: "debian:bullseye" }
+          - { runner: ubuntu-latest, image: "debian:bookworm" }
+          - { runner: ubuntu-latest, image: "ubuntu:22.04" }
+          - { runner: ubuntu-latest, image: "ubuntu:24.04" }
+          - { runner: ubuntu-24.04-arm, image: "debian:bookworm" }
+          - { runner: ubuntu-24.04-arm, image: "ubuntu:24.04" }
+    runs-on: ${{ matrix.runner }}
+    container: ${{ matrix.image }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./test-install.sh

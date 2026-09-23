@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>cbirds apt repository</title>
+<style>
+  body { font: 16px/1.5 system-ui, sans-serif; max-width: 46rem; margin: 3rem auto; padding: 0 1rem; }
+  pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; }
+  @media (prefers-color-scheme: dark) { body { background: #111; color: #ddd; } pre { background: #222; } a { color: #8ab4f8; } }
+</style>
+</head>
+<body>
+<h1>cbirds apt repository</h1>
+<p><a href="https://github.com/clainstone/cbirds">cbirds</a>, a flock of birds in your terminal, for Debian, Ubuntu and their derivatives, on amd64 and arm64.</p>
+<pre>curl -fsSL https://clainstone.com/apt/cbirds.gpg | sudo tee /etc/apt/keyrings/cbirds.gpg &gt;/dev/null
+echo "deb [signed-by=/etc/apt/keyrings/cbirds.gpg] https://clainstone.com/apt stable main" | sudo tee /etc/apt/sources.list.d/cbirds.list
+sudo apt update &amp;&amp; sudo apt install cbirds</pre>
+<p>Remove it with <code>sudo apt remove cbirds</code>, and the repository with <code>sudo rm /etc/apt/sources.list.d/cbirds.list /etc/apt/keyrings/cbirds.gpg</code>.</p>
+<p>Signing key: <a href="cbirds.asc">cbirds.asc</a>, fingerprint <code>14C9 356B 6C33 9CDD 5E96 C875 E1F8 E445 46C1 D91D</code>.</p>
+</body>
+</html>
