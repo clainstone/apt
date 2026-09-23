@@ -30,5 +30,5 @@ test -s /usr/share/zsh/vendor-completions/_cbirds
 test -s /usr/share/fish/vendor_completions.d/cbirds.fish
 
 apt-get remove -y cbirds
-if command -v cbirds; then exit 1; fi
+test ! -e /usr/bin/cbirds
 echo "installed, ran and removed cbirds $VERSION-$REVISION"

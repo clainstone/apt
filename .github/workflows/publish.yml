@@ -20,7 +20,7 @@ jobs:
     runs-on: ${{ matrix.runner }}
     container: debian:bookworm
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - run: apt-get update && apt-get install -y --no-install-recommends build-essential curl ca-certificates
       - run: ./build-deb.sh
       - run: dpkg-deb --info *.deb && dpkg-deb --contents *.deb
@@ -39,7 +39,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/download-artifact@v4
         with:
           pattern: deb-*
@@ -69,5 +69,5 @@ jobs:
     runs-on: ${{ matrix.runner }}
     container: ${{ matrix.image }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - run: ./test-install.sh
